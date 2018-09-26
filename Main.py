@@ -26,7 +26,7 @@ class Board:
                     print('_', end=" ")
             print()
 
-    # insert a queen (1) into a board at a given location, from 1 to 8 inclusively
+    # insert a queen (1) into a board at a given location
     def insert_queen(self, row, col):
         # if location outside of board, return false
         if row < 1 > col or row > 8 < col:
