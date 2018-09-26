@@ -1,11 +1,10 @@
 import copy
 
+# these codes indicate the status of a position in the board
 CONST_CODE_EMPTY = 0
 CONST_CODE_BLOCKED = -1
 CONST_CODE_QUEEN = 1
 class Board:
-    # these codes indicate the status of a position in the board
-
     def __init__(self, size):
         self._size=size
         self._queen_count = 0
@@ -36,6 +35,7 @@ class Board:
         if self._board[row][col] != CONST_CODE_EMPTY:
             return False
         self._board[row][col] = CONST_CODE_QUEEN
+        self._queen_count += 1
 
         # filling blocked positions with CONST_CODE_BLOCKED
         for i in range(size):
