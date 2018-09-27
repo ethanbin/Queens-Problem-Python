@@ -5,7 +5,7 @@ CONST_CODE_EMPTY = 0
 CONST_CODE_BLOCKED = -1
 CONST_CODE_QUEEN = 1
 class Board:
-    def __init__(self, size):
+    def __init__(self, size: int):
         self._size=size
         self._queen_count = 0
         self._board=[[0 for x in range(size)] for y in range(size)]
@@ -27,7 +27,7 @@ class Board:
             print()
 
     # insert a queen (1) into a board at a given location
-    def insert_queen(self, row, col):
+    def insert_queen(self, row: int, col: int) -> bool:
         # if location outside of board, return false
         if row < 1 > col or row > 8 < col:
             return False
@@ -73,5 +73,8 @@ class Board:
 
 size = 8
 starting_board = Board(size)
-starting_board.insert_queen(1,1)
+child = copy.deepcopy(starting_board)
+child.insert_queen(0,1)
+children = list()
+children.append(child)
 starting_board.print_board()
