@@ -29,7 +29,7 @@ class Board:
     # insert a queen (1) into a board at a given location
     def insert_queen(self, row: int, col: int) -> bool:
         # if location outside of board, return false
-        if row < 1 > col or row > 8 < col:
+        if row < 0 or col < 0 or row >= self._size or col >= self._size:
             return False
         # if queen cannot be placed in given location, return false
         if self._board[row][col] != CONST_CODE_EMPTY:
@@ -71,10 +71,11 @@ class Board:
                 self._board[blockedRow][blockedCol] = CONST_CODE_BLOCKED
         return True
 
+
+
 size = 8
 starting_board = Board(size)
-child = copy.deepcopy(starting_board)
-child.insert_queen(0,1)
-children = list()
-children.append(child)
+starting_board.insert_queen(0,0)
 starting_board.print_board()
+solutions = list()
+#depth_first_search(starting_board)
