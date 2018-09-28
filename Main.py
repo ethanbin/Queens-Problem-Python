@@ -27,6 +27,7 @@ class Board:
                 else:
                     print('_', end=" ")
             print()
+        print()
 
     def print_board_debug(self):
         for row in self._board:
@@ -84,20 +85,24 @@ class Board:
                 self._board[blockedRow][blockedCol] = CONST_CODE_BLOCKED
         return True
 
-def depth_first_search(board: Board):
+def depth_first_search(board: Board, current_row:int):
     for i in range(size):
         child = copy.deepcopy(board)
-        piece_inserted = child.insert_queen(0, i)
+        piece_inserted = child.insert_queen(i, current_row)
+        # if child has 8 pieces, it is a solution and will have no more children,
+        # so add to list of solutions and exit this recursive call
         if child.get_queen_count() >= CONST_SOLUTION_PIECE_COUNT:
             solutions.append(child)
             return
+        # if child had a piece inserted but is not yet a solution, traverse down this child
         if piece_inserted:
-            depth_first_search(child)
+            depth_first_search(child, current_row+1)
 
 
 size = 8
 starting_board = Board(size)
-starting_board.insert_queen(4,4)
-starting_board.print_board_debug()
 solutions = list()
-depth_first_search(starting_board)
+depth_first_search(starting_board, 0)
+for b in solutions:
+    b.print_board()
+print(len(solutions))
