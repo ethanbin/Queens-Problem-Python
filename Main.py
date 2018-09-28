@@ -28,6 +28,17 @@ class Board:
                     print('_', end=" ")
             print()
 
+    def print_board_debug(self):
+        for row in self._board:
+            for col in row:
+                if (col == CONST_CODE_QUEEN):
+                    print ('Q', end=" ")
+                elif col == CONST_CODE_BLOCKED:
+                    print ('X ', end="")
+                else:
+                    print('_', end=" ")
+            print()
+
     # insert a queen (1) into a board at a given location
     def insert_queen(self, row: int, col: int) -> bool:
         # if location outside of board, return false
@@ -43,10 +54,10 @@ class Board:
         for i in range(size):
             # set recentlyInsertedRow of newest queen to be blocked if empty
             if self._board[row][i] == CONST_CODE_EMPTY:
-                self._board[col][i] = CONST_CODE_BLOCKED;
+                self._board[row][i] = CONST_CODE_BLOCKED;
             # set column of newest queen to be blocked if empty
             if self._board[i][col] == CONST_CODE_EMPTY:
-                self._board[i][row] = CONST_CODE_BLOCKED;
+                self._board[i][col] = CONST_CODE_BLOCKED;
 
             # do diagonal from piece to bottom right
             blockedRow = row + i
@@ -86,5 +97,7 @@ def depth_first_search(board: Board):
 
 size = 8
 starting_board = Board(size)
+starting_board.insert_queen(4,4)
+starting_board.print_board_debug()
 solutions = list()
 depth_first_search(starting_board)
