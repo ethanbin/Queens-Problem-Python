@@ -4,6 +4,8 @@ import copy
 CONST_CODE_EMPTY = 0
 CONST_CODE_BLOCKED = -1
 CONST_CODE_QUEEN = 1
+CONST_SOLUTION_PIECE_COUNT = 8
+
 class Board:
     def __init__(self, size: int):
         self._size=size
@@ -71,11 +73,18 @@ class Board:
                 self._board[blockedRow][blockedCol] = CONST_CODE_BLOCKED
         return True
 
+def depth_first_search(board: Board):
+    for i in range(size):
+        child = copy.deepcopy(board)
+        piece_inserted = child.insert_queen(0, i)
+        if child.get_queen_count() >= CONST_SOLUTION_PIECE_COUNT:
+            solutions.append(child)
+            return
+        if piece_inserted:
+            depth_first_search(child)
 
 
 size = 8
 starting_board = Board(size)
-starting_board.insert_queen(0,0)
-starting_board.print_board()
 solutions = list()
-#depth_first_search(starting_board)
+depth_first_search(starting_board)
