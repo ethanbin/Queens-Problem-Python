@@ -10,6 +10,8 @@ CONST_SOLUTION_PIECE_COUNT = 8
 
 class Board:
     solutions = list()
+    solution_index = 0
+
     def __init__(self, size: int):
         self._size = size
         self._queen_count = 0
@@ -23,14 +25,15 @@ class Board:
         return self._queen_count
 
     def print_board(self):
+        str = ""
         for row in self._board:
             for col in row:
                 if (col == CONST_CODE_QUEEN):
-                    print ('Q', end=" ")
+                    str += "Q "
                 else:
-                    print('_', end=" ")
-            print()
-        print()
+                    str += "_ "
+            str += "\n"
+        return str
 
     def print_board_debug(self):
         for row in self._board:
@@ -118,27 +121,46 @@ class Window(Frame):
         # allowing the widget to take the full space of the root window
         self.pack(fill=BOTH, expand=1)
 
+        displayed_solution = StringVar()
+        displayed_solution.set(Board.solutions[Board.solution_index].print_board())
+        label = Label(self, textvariable=displayed_solution, font="Times32")
+        label.pack()
+
         # creating a button instance
-        quitButton = Button(self, text="Quit",command=self.client_exit)
+        last_button = Button(self, text="Last Solution",command=lambda: self.last_solution(displayed_solution))
+        next_button = Button(self, text="Next Solution",command=lambda: self.next_solution(displayed_solution))
 
         # placing the button on my window
-        quitButton.place(x=0, y=0)
+        last_button.place(relx=.1, rely=.95, anchor=CENTER)
+        next_button.place(relx=.9, rely=.95, anchor=CENTER)
 
-    def client_exit(self):
-        exit()
+    def next_solution(self, displayed_solution):
+        Board.solution_index = (Board.solution_index + 1) % len(Board.solutions)
+        self.update_display(displayed_solution)
+
+    def last_solution(self, displayed_solution):
+        Board.solution_index = (Board.solution_index - 1) % len(Board.solutions)
+        self.update_display(displayed_solution)
+
+    def update_display(self, displayed_solution):
+        displayed_solution.set(Board.solutions[Board.solution_index].print_board())
+
+
 
 def main():
-    root = Tk()
-    root.geometry("300x300")
-    app = Window(root)
-    root.mainloop()
-
     size = 8
     starting_board = Board(size)
     depth_first_search(starting_board, 0)
     for b in Board.solutions:
         b.print_board()
     print(len(Board.solutions))
+
+    root = Tk()
+    root.resizable(False, False)
+    height = int (root.winfo_screenheight() / 2)
+    root.geometry("{}x{}".format(height, height))
+    app = Window(root)
+    root.mainloop()
 
 if __name__ == '__main__':
     main()
