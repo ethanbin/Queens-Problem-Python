@@ -26,12 +26,18 @@ class Board:
 
     def print_board(self):
         str = ""
+        white_cell = True
         for row in self._board:
             for col in row:
                 if (col == CONST_CODE_QUEEN):
                     str += "Q "
                 else:
-                    str += "_ "
+                    if white_cell:
+                        str += u"\u25A1 "
+                    else:
+                        str += u"\u25A0 "
+                white_cell = not white_cell
+            white_cell = not white_cell
             str += "\n"
         return str
 
