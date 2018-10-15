@@ -131,6 +131,10 @@ class Board:
         return Board._solutions[Board._solution_index]
 
     @staticmethod
+    def get_current_solution_index() -> int:
+        return Board._solution_index
+
+    @staticmethod
     def next_solution():
         if len(Board._solutions) > 0:
             Board._solution_index = (Board._solution_index + 1) % len(Board._solutions)
@@ -159,9 +163,12 @@ def depth_first_search(board: Board, current_row:int):
 
 class Window(Frame):
     def __init__(self, master=None):
+        self._displayed_solution = StringVar()
+        self._solution_number = StringVar()
         Frame.__init__(self, master)
         self.master = master
         self.init_window()
+
 
     #Creation of init_window
     def init_window(self):
@@ -172,28 +179,32 @@ class Window(Frame):
         # allowing the widget to take the full space of the root window
         self.pack(fill=BOTH, expand=1)
 
-        displayed_solution = StringVar()
-        displayed_solution.set(Board.get_current_solution().print_board_2())
-        label = Label(self, textvariable=displayed_solution, font=("Lucida console",16))
-        label.pack()
+        self._displayed_solution.set(Board.get_current_solution().print_board_2())
+        self._board_label = Label(self, textvariable=self._displayed_solution, font=("Lucida console",16))
+        self._board_label.pack()
+
+        self._solution_number.set(1)
+        self._solution_number_label = Label(self, textvariable=self._solution_number, font=("Lucida console",16))
+        self._solution_number_label.pack()
+        self._solution_number_label.place(relx=.5, rely=.95, anchor=CENTER)
+
 
         # creating a button instance
-        last_button = Button(self, text="Last Solution",command=lambda: self.last_solution(displayed_solution))
-        next_button = Button(self, text="Next Solution",command=lambda: self.next_solution(displayed_solution))
+        last_button = Button(self, text="Last Solution",command=lambda: self.last_solution())
+        next_button = Button(self, text="Next Solution",command=lambda: self.next_solution())
 
         # placing the button on my window
         last_button.place(relx=.1, rely=.95, anchor=CENTER)
         next_button.place(relx=.9, rely=.95, anchor=CENTER)
 
-    def next_solution(self, displayed_solution):
-        displayed_solution.set(Board.next_solution().print_board_2())
+    def next_solution(self):
+        self._displayed_solution.set(Board.next_solution().print_board_2())
+        self._solution_number.set(Board.get_current_solution_index() + 1)
 
-    def last_solution(self, displayed_solution):
-        displayed_solution.set(Board.last_solution().print_board_2())
 
-    def update_display(self, displayed_solution):
-        displayed_solution.set(Board.get_current_solution_2())
-
+    def last_solution(self):
+        self._displayed_solution.set(Board.last_solution().print_board_2())
+        self._solution_number.set(Board.get_current_solution_index() + 1)
 
 def main():
     size = 8
