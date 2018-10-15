@@ -180,18 +180,17 @@ class Window(Frame):
         self.pack(fill=BOTH, expand=1)
 
         self._displayed_solution.set(Board.get_current_solution().print_board_2())
-        self._board_label = Label(self, textvariable=self._displayed_solution, font=("Lucida console",16))
-        self._board_label.pack()
+        board_label = Label(self, textvariable=self._displayed_solution, font=("Lucida console",16))
+        board_label.pack()
 
         self._solution_number.set(1)
-        self._solution_number_label = Label(self, textvariable=self._solution_number, font=("Lucida console",16))
-        self._solution_number_label.pack()
-        self._solution_number_label.place(relx=.5, rely=.95, anchor=CENTER)
-
+        solution_number_label = Label(self, textvariable=self._solution_number, font=("Lucida console",16))
+        solution_number_label.pack()
+        solution_number_label.place(relx=.5, rely=.95, anchor=CENTER)
 
         # creating a button instance
-        last_button = Button(self, text="Last Solution",command=lambda: self.last_solution())
-        next_button = Button(self, text="Next Solution",command=lambda: self.next_solution())
+        last_button = Button(self, text="Last Solution", command=lambda: self.last_solution())
+        next_button = Button(self, text="Next Solution", command=lambda: self.next_solution())
 
         # placing the button on my window
         last_button.place(relx=.1, rely=.95, anchor=CENTER)
