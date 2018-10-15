@@ -1,4 +1,5 @@
 import copy
+import argparse
 from tkinter import *
 
 # these codes indicate the status of a position in the board
@@ -148,6 +149,10 @@ class Board:
             Board._solution_index = (Board._solution_index - 1) % len(Board._solutions)
             return Board.get_current_solution()
 
+    @staticmethod
+    def get_solutions_size() -> int:
+        return len(Board._solutions)
+
 def depth_first_search(board: Board, current_row: int):
     for i in range(board.get_size()):
         child = copy.deepcopy(board)
@@ -179,7 +184,12 @@ class Window(Frame):
         # allowing the widget to take the full space of the root window
         self.pack(fill=BOTH, expand=1)
 
-        self._displayed_solution.set(Board.get_current_solution().print_board_2())
+        if Board.get_solutions_size() < 1:
+            current_solution = "No Solutions"
+        else:
+            current_solution = Board.get_current_solution().print_board_2()
+
+        self._displayed_solution.set(current_solution)
         board_label = Label(self, textvariable=self._displayed_solution, font=("Courier", 16))
         board_label.pack()
 
@@ -201,10 +211,14 @@ class Window(Frame):
         next_button.place(relx=.9, rely=.95, anchor=CENTER)
 
     def last_solution(self):
+        if Board.get_solutions_size() < 1:
+            return
         self._displayed_solution.set(Board.last_solution().print_board_2())
         self._solution_number.set(Board.get_current_solution_index() + 1)
 
     def next_solution(self):
+        if Board.get_solutions_size() < 1:
+            return
         self._displayed_solution.set(Board.next_solution().print_board_2())
         self._solution_number.set(Board.get_current_solution_index() + 1)
 
@@ -216,8 +230,21 @@ class Window(Frame):
 
 
 def main():
-    size = 8
-    starting_board = Board(size)
+    # creating arguments
+    parser = argparse.ArgumentParser(description='''Solve the Queens Problem and display all solutions in a GUI.''')
+    parser.add_argument('-s', '--size', help='Specify board size.', required=False)
+    args = parser.parse_args()
+    if args.size is None:
+        args.size = 8
+    else:
+        try:
+            args.size=int(args.size)
+        except:
+            print("Error: expected integer number.")
+            return
+
+
+    starting_board = Board(args.size)
     depth_first_search(starting_board, 0)
 
     root = Tk()
