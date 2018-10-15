@@ -174,7 +174,7 @@ class Window(Frame):
 
         displayed_solution = StringVar()
         displayed_solution.set(Board.get_current_solution().print_board_2())
-        label = Label(self, textvariable=displayed_solution, font=("FixedSys",16))
+        label = Label(self, textvariable=displayed_solution, font=("Lucida console",16))
         label.pack()
 
         # creating a button instance
