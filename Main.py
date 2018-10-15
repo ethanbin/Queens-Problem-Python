@@ -182,11 +182,11 @@ class Window(Frame):
         self.pack(fill=BOTH, expand=1)
 
         self._displayed_solution.set(Board.get_current_solution().print_board_2())
-        board_label = Label(self, textvariable=self._displayed_solution, font=("Lucida console", 16))
+        board_label = Label(self, textvariable=self._displayed_solution, font=("Courier", 20))
         board_label.pack()
 
         self._solution_number.set(1)
-        solution_number_label = Label(self, textvariable=self._solution_number, font=("Lucida console", 16))
+        solution_number_label = Label(self, textvariable=self._solution_number, font=("Courier", 20))
         solution_number_label.pack()
         solution_number_label.place(relx=.5, rely=.95, anchor=CENTER)
 
