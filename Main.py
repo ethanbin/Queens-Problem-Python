@@ -150,7 +150,6 @@ class Board:
             Board._solution_index = (Board._solution_index - 1) % len(Board._solutions)
             return Board.get_current_solution()
 
-
 def depth_first_search(board: Board, current_row: int):
     for i in range(board.get_size()):
         child = copy.deepcopy(board)
@@ -195,17 +194,27 @@ class Window(Frame):
         last_button = Button(self, text="Last Solution", command=lambda: self.last_solution())
         next_button = Button(self, text="Next Solution", command=lambda: self.next_solution())
 
+        self.master.bind('<Left>', self.left_key)
+        self.master.bind('<Right>', self.right_key)
+
+
         # placing the button on my window
         last_button.place(relx=.1, rely=.95, anchor=CENTER)
         next_button.place(relx=.9, rely=.95, anchor=CENTER)
+
+    def last_solution(self):
+        self._displayed_solution.set(Board.last_solution().print_board_2())
+        self._solution_number.set(Board.get_current_solution_index() + 1)
 
     def next_solution(self):
         self._displayed_solution.set(Board.next_solution().print_board_2())
         self._solution_number.set(Board.get_current_solution_index() + 1)
 
-    def last_solution(self):
-        self._displayed_solution.set(Board.last_solution().print_board_2())
-        self._solution_number.set(Board.get_current_solution_index() + 1)
+    def left_key(self, event):
+        self.last_solution()
+
+    def right_key(self, event):
+        self.next_solution()
 
 
 def main():
