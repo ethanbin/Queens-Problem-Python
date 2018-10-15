@@ -215,8 +215,9 @@ def main():
 
     root = Tk()
     root.resizable(False, False)
-    height = int(root.winfo_screenheight() / 2)
-    root.geometry("{}x{}".format(height, height))
+    root.geometry("450x450")
+    # height = int(root.winfo_screenheight() / 2)
+    # root.geometry("{}x{}".format(height, height))
     Window(root)
     root.mainloop()
 
