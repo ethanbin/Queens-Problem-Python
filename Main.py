@@ -9,8 +9,8 @@ CONST_SOLUTION_PIECE_COUNT = 8
 
 
 class Board:
-    solutions = list()
-    solution_index = 0
+    _solutions = list()
+    _solution_index = 0
 
     def __init__(self, size: int):
         self._size = size
@@ -38,6 +38,17 @@ class Board:
                         str += u"\u25A0 "
                 white_cell = not white_cell
             white_cell = not white_cell
+            str += "\n"
+        return str
+
+    def print_board_2(self):
+        str = ""
+        for row in self._board:
+            for col in row:
+                if (col == CONST_CODE_QUEEN):
+                    str += "Q "
+                else:
+                    str += "_ "
             str += "\n"
         return str
 
@@ -97,6 +108,35 @@ class Board:
                 self._board[blockedRow][blockedCol] = CONST_CODE_BLOCKED
         return True
 
+    @staticmethod
+    def add_solution(board) -> bool:
+        if board is None or not isinstance(board, Board):
+            return False
+        if board.get_queen_count() != CONST_SOLUTION_PIECE_COUNT:
+            return False
+        Board._solutions.append(board)
+        return True
+
+    @staticmethod
+    def get_current_solution():
+        if len(Board._solutions) < 1:
+            return None
+        #if _solution_index >= len(_solution)
+        #    return None
+        return Board._solutions[Board._solution_index]
+
+    @staticmethod
+    def next_solution():
+        if len(Board._solutions) > 0:
+            Board._solution_index = (Board._solution_index + 1) % len(Board._solutions)
+            return Board.get_current_solution()
+
+    @staticmethod
+    def last_solution():
+        if len(Board._solutions) > 0:
+            Board._solution_index = (Board._solution_index - 1) % len(Board._solutions)
+            return Board.get_current_solution()
+
 
 def depth_first_search(board: Board, current_row:int):
     for i in range(board._size):
@@ -105,7 +145,7 @@ def depth_first_search(board: Board, current_row:int):
         # if child has 8 pieces, it is a solution and will have no more children,
         # so add to list of solutions and exit this recursive call
         if child.get_queen_count() >= CONST_SOLUTION_PIECE_COUNT:
-            Board.solutions.append(child)
+            Board.add_solution(child)
             return
         # if child had a piece inserted but is not yet a solution, traverse down this child
         if piece_inserted:
@@ -128,7 +168,7 @@ class Window(Frame):
         self.pack(fill=BOTH, expand=1)
 
         displayed_solution = StringVar()
-        displayed_solution.set(Board.solutions[Board.solution_index].print_board())
+        displayed_solution.set(Board.get_current_solution().print_board_2())
         label = Label(self, textvariable=displayed_solution, font="Times32")
         label.pack()
 
@@ -141,25 +181,19 @@ class Window(Frame):
         next_button.place(relx=.9, rely=.95, anchor=CENTER)
 
     def next_solution(self, displayed_solution):
-        Board.solution_index = (Board.solution_index + 1) % len(Board.solutions)
-        self.update_display(displayed_solution)
+        displayed_solution.set(Board.next_solution().print_board_2())
 
     def last_solution(self, displayed_solution):
-        Board.solution_index = (Board.solution_index - 1) % len(Board.solutions)
-        self.update_display(displayed_solution)
+        displayed_solution.set(Board.last_solution().print_board_2())
 
     def update_display(self, displayed_solution):
-        displayed_solution.set(Board.solutions[Board.solution_index].print_board())
-
+        displayed_solution.set(Board.get_current_solution_2())
 
 
 def main():
     size = 8
     starting_board = Board(size)
     depth_first_search(starting_board, 0)
-    for b in Board.solutions:
-        b.print_board()
-    print(len(Board.solutions))
 
     root = Tk()
     root.resizable(False, False)
