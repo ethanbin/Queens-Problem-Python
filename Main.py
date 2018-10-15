@@ -243,15 +243,17 @@ def main():
             print("Error: expected integer number.")
             return
 
-
+    print("Calculating...")
     starting_board = Board(args.size)
     depth_first_search(starting_board, 0)
 
     root = Tk()
     root.resizable(False, False)
     root.geometry("450x450")
-    # height = int(root.winfo_screenheight() / 2)
-    # root.geometry("{}x{}".format(height, height))
+    height = int(50 * args.size) + 50
+    if height < 80:
+        height = 80
+    root.geometry("{}x{}".format(height, height))
     Window(root)
     root.mainloop()
 
