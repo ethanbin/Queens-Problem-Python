@@ -42,15 +42,20 @@ class Board:
         return str
 
     def print_board_2(self):
-        str = ""
-        for row in self._board:
-            for col in row:
-                if (col == CONST_CODE_QUEEN):
-                    str += "Q "
+        formatted_board = "   "
+        for i in range(self.get_size()):
+            formatted_board += str(i+1) + "  "
+        formatted_board += "\n\n"
+
+        for i in range(self.get_size()):
+            formatted_board += str(i+1) + "  "
+            for j in range(self.get_size()):
+                if self._board[i][j] == CONST_CODE_QUEEN:
+                    formatted_board += "Q  "
                 else:
-                    str += "_ "
-            str += "\n"
-        return str
+                    formatted_board += "-  "
+            formatted_board += "\n\n"
+        return formatted_board
 
     def print_board_debug(self):
         for row in self._board:
@@ -169,7 +174,7 @@ class Window(Frame):
 
         displayed_solution = StringVar()
         displayed_solution.set(Board.get_current_solution().print_board_2())
-        label = Label(self, textvariable=displayed_solution, font="Times32")
+        label = Label(self, textvariable=displayed_solution, font=("FixedSys",16))
         label.pack()
 
         # creating a button instance
