@@ -5,8 +5,6 @@ from tkinter import *
 CONST_CODE_EMPTY = 0
 CONST_CODE_BLOCKED = -1
 CONST_CODE_QUEEN = 1
-CONST_SOLUTION_PIECE_COUNT = 8
-
 
 class Board:
     _solutions = list()
@@ -120,7 +118,7 @@ class Board:
     def add_solution(board) -> bool:
         if board is None or not isinstance(board, Board):
             return False
-        if board.get_queen_count() != CONST_SOLUTION_PIECE_COUNT:
+        if board.get_queen_count() != board.get_size():
             return False
         Board._solutions.append(board)
         return True
@@ -156,7 +154,7 @@ def depth_first_search(board: Board, current_row: int):
         piece_inserted = child.insert_queen(i, current_row)
         # if child has 8 pieces, it is a solution and will have no more children,
         # so add to list of solutions and exit this recursive call
-        if child.get_queen_count() >= CONST_SOLUTION_PIECE_COUNT:
+        if child.get_queen_count() >= board.get_size():
             Board.add_solution(child)
             return
         # if child had a piece inserted but is not yet a solution, traverse down this child
@@ -182,11 +180,11 @@ class Window(Frame):
         self.pack(fill=BOTH, expand=1)
 
         self._displayed_solution.set(Board.get_current_solution().print_board_2())
-        board_label = Label(self, textvariable=self._displayed_solution, font=("Courier", 20))
+        board_label = Label(self, textvariable=self._displayed_solution, font=("Courier", 16))
         board_label.pack()
 
         self._solution_number.set(1)
-        solution_number_label = Label(self, textvariable=self._solution_number, font=("Courier", 20))
+        solution_number_label = Label(self, textvariable=self._solution_number, font=("Courier", 16))
         solution_number_label.pack()
         solution_number_label.place(relx=.5, rely=.95, anchor=CENTER)
 
