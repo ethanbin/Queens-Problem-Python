@@ -15,7 +15,7 @@ class Board:
     def __init__(self, size: int):
         self._size = size
         self._queen_count = 0
-        self._board  = [[0 for x in range(size)] for y in range(size)]
+        self._board = [[0 for x in range(size)] for y in range(size)]
         return
 
     def get_size(self):
@@ -25,21 +25,21 @@ class Board:
         return self._queen_count
 
     def print_board(self):
-        str = ""
+        formatted_board = ""
         white_cell = True
         for row in self._board:
             for col in row:
-                if (col == CONST_CODE_QUEEN):
-                    str += "Q "
+                if col == CONST_CODE_QUEEN:
+                    formatted_board += "Q "
                 else:
                     if white_cell:
-                        str += u"\u25A1 "
+                        formatted_board += u"\u25A1 "
                     else:
-                        str += u"\u25A0 "
+                        formatted_board += u"\u25A0 "
                 white_cell = not white_cell
             white_cell = not white_cell
-            str += "\n"
-        return str
+            formatted_board += "\n"
+        return formatted_board
 
     def print_board_2(self):
         formatted_board = "   "
@@ -60,10 +60,10 @@ class Board:
     def print_board_debug(self):
         for row in self._board:
             for col in row:
-                if (col == CONST_CODE_QUEEN):
-                    print ('Q', end=" ")
+                if col == CONST_CODE_QUEEN:
+                    print('Q', end=" ")
                 elif col == CONST_CODE_BLOCKED:
-                    print ('X ', end="")
+                    print('X ', end="")
                 else:
                     print('_', end=" ")
             print()
@@ -83,34 +83,37 @@ class Board:
         for i in range(self._size):
             # set recentlyInsertedRow of newest queen to be blocked if empty
             if self._board[row][i] == CONST_CODE_EMPTY:
-                self._board[row][i] = CONST_CODE_BLOCKED;
+                self._board[row][i] = CONST_CODE_BLOCKED
             # set column of newest queen to be blocked if empty
             if self._board[i][col] == CONST_CODE_EMPTY:
-                self._board[i][col] = CONST_CODE_BLOCKED;
+                self._board[i][col] = CONST_CODE_BLOCKED
 
             # do diagonal from piece to bottom right
-            blockedRow = row + i
-            blockedCol = col + i
-            if blockedRow < self._size and blockedCol < self._size and self._board[blockedRow][blockedCol] == CONST_CODE_EMPTY:
-                self._board[blockedRow][blockedCol] = CONST_CODE_BLOCKED;
+            blocked_row = row + i
+            blocked_col = col + i
+            if blocked_row < self._size and blocked_col < self._size and \
+                    self._board[blocked_row][blocked_col] == CONST_CODE_EMPTY:
+                self._board[blocked_row][blocked_col] = CONST_CODE_BLOCKED
 
             # do diagonal from piece to top left
-            blockedRow = row - i
-            blockedCol = col - i
-            if blockedRow >= 0 and blockedCol >= 0 and self._board[blockedRow][blockedCol] == CONST_CODE_EMPTY:
-                self._board[blockedRow][blockedCol] = CONST_CODE_BLOCKED;
+            blocked_row = row - i
+            blocked_col = col - i
+            if blocked_row >= 0 and blocked_col >= 0 and self._board[blocked_row][blocked_col] == CONST_CODE_EMPTY:
+                self._board[blocked_row][blocked_col] = CONST_CODE_BLOCKED
 
             # do diagonal from piece to top right
-            blockedRow = row - i
-            blockedCol = col + i
-            if blockedRow >= 0 and blockedCol < self._size and self._board[blockedRow][blockedCol] == CONST_CODE_EMPTY:
-                self._board[blockedRow][blockedCol] = CONST_CODE_BLOCKED;
+            blocked_row = row - i
+            blocked_col = col + i
+            if blocked_row >= 0 and blocked_col < self._size and \
+                    self._board[blocked_row][blocked_col] == CONST_CODE_EMPTY:
+                self._board[blocked_row][blocked_col] = CONST_CODE_BLOCKED
 
             # do diagonal from piece to bottom left
-            blockedRow = row + i
-            blockedCol = col - i
-            if blockedRow < self._size and blockedCol >= 0 and self._board[blockedRow][blockedCol] == CONST_CODE_EMPTY:
-                self._board[blockedRow][blockedCol] = CONST_CODE_BLOCKED
+            blocked_row = row + i
+            blocked_col = col - i
+            if blocked_row < self._size and blocked_col >= 0 and \
+                    self._board[blocked_row][blocked_col] == CONST_CODE_EMPTY:
+                self._board[blocked_row][blocked_col] = CONST_CODE_BLOCKED
         return True
 
     @staticmethod
@@ -126,8 +129,9 @@ class Board:
     def get_current_solution():
         if len(Board._solutions) < 1:
             return None
-        #if _solution_index >= len(_solution)
-        #    return None
+        if Board._solution_index >= len(Board._solutions) or \
+                Board._solution_index < 0:
+            return None
         return Board._solutions[Board._solution_index]
 
     @staticmethod
@@ -147,8 +151,8 @@ class Board:
             return Board.get_current_solution()
 
 
-def depth_first_search(board: Board, current_row:int):
-    for i in range(board._size):
+def depth_first_search(board: Board, current_row: int):
+    for i in range(board.get_size()):
         child = copy.deepcopy(board)
         piece_inserted = child.insert_queen(i, current_row)
         # if child has 8 pieces, it is a solution and will have no more children,
@@ -169,8 +173,7 @@ class Window(Frame):
         self.master = master
         self.init_window()
 
-
-    #Creation of init_window
+    # Creation of init_window
     def init_window(self):
 
         # changing the title of our master widget
@@ -180,11 +183,11 @@ class Window(Frame):
         self.pack(fill=BOTH, expand=1)
 
         self._displayed_solution.set(Board.get_current_solution().print_board_2())
-        board_label = Label(self, textvariable=self._displayed_solution, font=("Lucida console",16))
+        board_label = Label(self, textvariable=self._displayed_solution, font=("Lucida console", 16))
         board_label.pack()
 
         self._solution_number.set(1)
-        solution_number_label = Label(self, textvariable=self._solution_number, font=("Lucida console",16))
+        solution_number_label = Label(self, textvariable=self._solution_number, font=("Lucida console", 16))
         solution_number_label.pack()
         solution_number_label.place(relx=.5, rely=.95, anchor=CENTER)
 
@@ -200,10 +203,10 @@ class Window(Frame):
         self._displayed_solution.set(Board.next_solution().print_board_2())
         self._solution_number.set(Board.get_current_solution_index() + 1)
 
-
     def last_solution(self):
         self._displayed_solution.set(Board.last_solution().print_board_2())
         self._solution_number.set(Board.get_current_solution_index() + 1)
+
 
 def main():
     size = 8
@@ -212,10 +215,11 @@ def main():
 
     root = Tk()
     root.resizable(False, False)
-    height = int (root.winfo_screenheight() / 2)
+    height = int(root.winfo_screenheight() / 2)
     root.geometry("{}x{}".format(height, height))
-    app = Window(root)
+    Window(root)
     root.mainloop()
+
 
 if __name__ == '__main__':
     main()
