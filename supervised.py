@@ -23,10 +23,8 @@ def generate_training_sets() -> list:
 
 # return set of calculated weights
 def learn(training_sets: list, learning_rate) -> list:
-    weights = list()
-    w1 = random.uniform(-1, 1)
-    w2 = random.uniform(-1, 1)
-    weights = [[w1, w2], [w1 + 1, w2 + 1]]
+    weight0 = random.uniform(-1, 1)
+    weight1 = random.uniform(-1, 1)
 
     w0, w1, x, y = symbols('w0 w1 x y')
     loss = (y - (w0 + w1 * x)) ** 2
@@ -38,18 +36,17 @@ def learn(training_sets: list, learning_rate) -> list:
 
     # save weights to position i (0 at first), then update and store in position (i + 1)%2
     # by repeating this, we keep current weights and what weights previously were
-    i = 0
-    while (abs(weights[i][0] - weights[(i+1) % 2][0]) > W_MARGIN and
-           abs(weights[i][1] - weights[(i+1) % 2][1]) > W_MARGIN):
+    last_w0, last_w1 = weight0+1, weight1+1
+    while abs(last_w0 - weight0) > W_MARGIN and abs(last_w1 - weight1) > W_MARGIN:
         sum0 = 0
         sum1 = 0
         for trainingSet in training_sets:
-            sum0 = sum0 + function_for_w0(weights[i][0], weights[i][1], trainingSet[0], trainingSet[1])
-            sum1 = sum1 + function_for_w1(weights[i][0], weights[i][1], trainingSet[0], trainingSet[1])
-        weights[(i + 1) % 2][0] = weights[i][0] - sum0/len(training_sets) * learning_rate
-        weights[(i + 1) % 2][1] = weights[i][1] - sum0/len(training_sets) * learning_rate
-        i = (i + 1) % 2
-    return weights[i]
+            sum0 = sum0 + function_for_w0(weight0, weight1, trainingSet[0], trainingSet[1])
+            sum1 = sum1 + function_for_w1(weight0, weight1, trainingSet[0], trainingSet[1])
+        last_w0, last_w1 = weight0, weight1
+        weight0 -= sum0/len(training_sets) * learning_rate
+        weight1 -= sum0/len(training_sets) * learning_rate
+    return weight0, weight1
 
 
 def main():
@@ -70,7 +67,7 @@ def main():
     print("weight0 = ", w0)
     print("weight1 = ", w1)
     print()
-    
+
     x_average = 0
     y_average = 0
     for training_set in training_sets:
