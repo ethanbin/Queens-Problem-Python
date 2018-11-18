@@ -11,9 +11,9 @@ def get_input_results(x: int) -> int:
 
 def generate_training_sets() -> list:
     training_sets = list()
-    for i in range(1, 1000):
+    for i in range(1, 10):
         training_set = list()
-        x = random.randint(1, 101)
+        x = i  # random.randint(1, 101)
         y = get_input_results(x)
         training_set.append(x)
         training_set.append(y)
