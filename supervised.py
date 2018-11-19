@@ -55,7 +55,7 @@ def main():
         for val in set:
             print(val, end=' ')
         print()'''
-    rate = 0.00001
+    rate = 1/8
     w0, w1 = learn(training_sets, rate)
 
     print("Learning rate = ", rate)
